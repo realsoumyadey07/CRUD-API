@@ -11,7 +11,29 @@ app.use(express.json());
 
 app.get('/', (req, res)=>{
      res.send("Welcome to the server!");
-})
+});
+//show all products
+app.get('/api/products', async (req, res)=>{
+     try {
+          const products = await Product.find({});
+          res.status(200).json(products);
+     } catch (error) {
+          res.status(500).json({ message: error.message})
+     }
+});
+
+//show products by ID
+app.get('/api/products/:id', async (req, res)=>{
+     try {
+          const { id } = req.params;
+          const product = await Product.findById(id);
+          res.status(200).json(product);
+     } catch (error) {
+          res.status(500).json({message: error.message});
+     }
+});
+
+//create product
 app.post('/api/products', async(req, res)=>{
      try{
           const product = await Product.create(req.body);
@@ -19,7 +41,28 @@ app.post('/api/products', async(req, res)=>{
      } catch(error){
          res.status(500).json({message: error.message}); 
      }
+});
+
+//update product
+app.put('/api/product/:id', async (req, res)=>{
+     try {
+          const {id} = req.params;
+          const product = await Product.findByIdAndUpdate(id, req.body);
+          if(!product){
+               return res.status(404).json({message: "Product not found"});
+          }
+          const updatedProduct = await Product.findById(id);
+          res.status(200).json(updatedProduct);
+     } catch (error) {
+          res.status(500).json({message: error.message})
+     }
+});
+
+//delete product
+app.delete('', async (req, res)=>{
+
 })
+
 
 //database connection
 //mongoDB project's password
