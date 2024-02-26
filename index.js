@@ -9,6 +9,12 @@ const port = 8000;
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
+
+//routes
+app.use('/api/products', productRoute)
+
+
+
 app.get('/', (req, res)=>{
      res.send("Welcome to the server!");
 });
@@ -36,8 +42,8 @@ app.get('/api/products/:id', async (req, res)=>{
 //create product
 app.post('/api/products', async(req, res)=>{
      try{
-          const product = await Product.create(req.body);
-          res.status(200).json(product);
+         const product = await Product.create(req.body);
+         res.status(200).json(product);
      } catch(error){
          res.status(500).json({message: error.message}); 
      }
